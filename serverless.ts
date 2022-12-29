@@ -1,5 +1,5 @@
 import type { AWS } from "@serverless/typescript";
-import { serverPinger } from "handlers";
+import { serverPinger, serverUpdater } from "handlers";
 
 const serverlessConfiguration: AWS = {
   service: "minecount",
@@ -32,6 +32,7 @@ const serverlessConfiguration: AWS = {
 
   functions: {
     serverPinger,
+    serverUpdater,
   },
 };
 
