@@ -1,0 +1,32 @@
+{
+  "author": "Brice Frisco",
+  "name": "minecount-pinger",
+  "version": "1.0.0",
+  "main": "serverless.ts",
+  "scripts": {
+    "build": "tsc"
+  },
+  "engines": {
+    "node": ">=18.12.1"
+  },
+  "keywords": [
+    "overstats"
+  ],
+  "license": "MIT",
+  "dependencies": {
+    "@influxdata/influxdb-client": "^1.33.0",
+    "minecraft-server-util": "^5.3.1",
+    "pg": "^8.8.0"
+  },
+  "devDependencies": {
+    "@serverless/typescript": "^3.25.0",
+    "@types/aws-lambda": "^8.10.109",
+    "@types/node": "^18.11.18",
+    "@types/pg": "^8.6.6",
+    "serverless": "^3.26.0",
+    "serverless-esbuild": "^1.34.0",
+    "ts-node": "^10.9.1",
+    "tsconfig-paths": "^4.1.1",
+    "typescript": "^4.9.4"
+  }
+}
