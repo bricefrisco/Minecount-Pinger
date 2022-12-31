@@ -1,18 +1,10 @@
 import * as pg from "pg";
 import { status, JavaStatusResponse } from "minecraft-server-util";
-import { InfluxDB, Point } from "@influxdata/influxdb-client";
 import { Server } from "./handler.types";
 import { ScheduledEvent } from "aws-lambda";
 
-const postgresClient = new pg.Client({ ssl: true });
+const postgresClient = new pg.Client();
 postgresClient.connect();
-
-const influxClient = new InfluxDB({
-  url: "https://us-east-1-1.aws.cloud2.influxdata.com",
-  token: process.env.INFLUXDB_TOKEN,
-});
-
-const influxWriteApi = influxClient.getWriteApi("bfrisco", "minecount", "ms");
 
 const validateEnv = (keys: string[]) => {
   for (const key of keys) {
@@ -22,14 +14,7 @@ const validateEnv = (keys: string[]) => {
   }
 };
 
-validateEnv([
-  "INFLUXDB_TOKEN",
-  "PGUSER",
-  "PGPASSWORD",
-  "PGHOST",
-  "PGPORT",
-  "PGDATABASE",
-]);
+validateEnv(["PGUSER", "PGPASSWORD", "PGHOST", "PGPORT", "PGDATABASE"]);
 
 const pingAndWrite = async (
   id: number,
@@ -39,12 +24,12 @@ const pingAndWrite = async (
     const ping: JavaStatusResponse = await status(ip, undefined, {
       timeout: 10000,
     });
+
     const onlinePlayers = ping.players.online;
 
-    influxWriteApi.writePoint(
-      new Point("player_count")
-        .tag("server_id", id.toString())
-        .intField("count", onlinePlayers)
+    await postgresClient.query(
+      `INSERT INTO server_pings (time, server_id, player_count) VALUES ($1, $2, $3)`,
+      [new Date(), id, onlinePlayers]
     );
 
     return { id, ip, onlinePlayers };
@@ -67,7 +52,6 @@ export const main = async (
   }
 
   const results = await Promise.all(promises);
-  await influxWriteApi.flush();
 
   console.log(JSON.stringify(results));
   return results;

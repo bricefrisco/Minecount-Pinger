@@ -8,7 +8,7 @@ import {
   UpdateType,
 } from "./handler.types";
 
-const postgresClient = new pg.Client({ ssl: true });
+const postgresClient = new pg.Client();
 postgresClient.connect();
 
 const validateEnv = (keys: string[]) => {

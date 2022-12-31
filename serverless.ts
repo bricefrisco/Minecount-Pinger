@@ -21,7 +21,6 @@ const serverlessConfiguration: AWS = {
     name: "aws",
     runtime: "nodejs18.x",
     environment: {
-      INFLUXDB_TOKEN: "${ssm:/minecount-influx-db-token}",
       PGUSER: "${ssm:/minecount-pg-user}",
       PGPASSWORD: "${ssm:/minecount-pg-password}",
       PGHOST: "${ssm:/minecount-pg-host}",
